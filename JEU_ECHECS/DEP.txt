@@ -1,0 +1,575 @@
+bool Plateau::RoiB() {
+    // Recherche de la position du roi blanc
+    int rbLigne = -1;
+    int rbColonne = -1;
+    for (int ligne = 0; ligne < 8; ligne++) {
+        for (int colonne = 0; colonne < 8; colonne++) {
+            if (t[ligne][colonne] == -6) {  // le roi blanc a la valeur -6 dans la matrice
+                rbLigne = ligne;
+                rbColonne = colonne;
+            }
+        }
+    }
+    // Vérification s'il est en échec
+    if (CheckRoiBlanc(rbLigne, rbColonne)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool Plateau::RoiN() {
+    // Recherche de la position du roi noir
+    int rnLigne = -1;
+    int rnColonne = -1;
+    for (int ligne = 0; ligne < 8; ligne++) {
+        for (int colonne = 0; colonne < 8; colonne++) {
+            if (t[ligne][colonne] == 6) {  // le roi noir a la valeur 6 dans la matrice
+                rnLigne = ligne;
+                rnColonne = colonne;
+            }
+        }
+    }
+    // Vérification s'il est en échec
+    if (CheckRoiNoir(rnLigne, rnColonne)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool Plateau::Null() {
+    // Recherche s'il y a assez de pièces pour continuer la partie
+    int nbPiecesBlanches = 0;
+    int nbPiecesNoires = 0;
+    for (int ligne = 0; ligne < 8; ligne++) {
+        for (int colonne = 0; colonne < 8; colonne++) {
+            if (t[ligne][colonne] > 0) {  // la valeur positive représente une pièce noire
+                nbPiecesNoires++;
+            } else if (t[ligne][colonne] < 0) {  // la valeur négative représente une pièce blanche
+                nbPiecesBlanches++;
+            }
+        }
+    }
+    if (nbPiecesBlanches == 1 && nbPiecesNoires == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool Plateau::Mate() {
+    // Recherche si le roi blanc est en échec et s'il n'a pas de coups possibles
+    if (RoiB() && nbCoupsPossibles(-1) == 0) {
+        return true;
+    }
+    // Recherche si le roi noir est en échec et s'il n'a pas de coups possibles
+    if (RoiN() && nbCoupsPossibles(1) == 0) {
+        return true;
+    }
+    return false;
+}
+
+bool Plateau::Finpartie() {
+    // Recherche s'il y a mat ou si la partie est nulle
+    if (Mate()) {
+        return true;
+    } else if (Null()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+///////////////////////////////////////////////////////////
+int Plateau::evaluer(int ld,int cd,int la,int ca)
+{
+	if(t[ld][cd]==6 || t[ld][cd]==-6)
+	{
+		movpion(ld,cd,la,ca);
+		return 1;
+	}
+	return 0;
+}
+
+
+int Plateau::movdame(int ld,int cd,int la,int ca)
+{
+	int i,j,k,r,cp;
+	if(t[ld][cd]==2)
+	{
+		for(i=0;i<=7;i++) //en bas
+		{	
+			if(la==ld+i && ca==cd)
+			{
+				t[ld+i][cd]=2;
+				t[ld][cd]=0;
+				cp=ld+i;
+			}
+			if(cp==la)//pour arriver a la et sortir de la boucle
+			{
+				i=8;
+				return 1;
+			}
+		}
+		
+		for(k=0;k<=7;k++) //a droite
+		{	
+			if(la==ld && ca==cd+k)
+			{
+				t[ld][cd+k]=2;
+				t[ld][cd]=0;
+				cp=ld+k;
+			}
+			if(cp==la)
+			{
+				k=8;
+				return 1;
+			}
+		}
+		
+		for(j=7;j>=0;j--) //en haut
+		{	
+			if(la==ld-j && ca==cd)
+			{
+				t[ld-j][cd]=2;
+				t[ld][cd]=0;
+				cp=ld-j;
+			}
+			if(cp==la)
+			{
+				j=-1;
+				return 1;
+			}
+		}
+		for(r=7;r>=0;r--)//a gauche
+		{	
+			if(la==ld && ca==cd-r)
+			{
+				t[ld][cd-r]=2;
+				t[ld][cd]=0;
+				cp=ld-r;
+			}
+			if(cp==la)
+			{
+				r=-1;
+				return 1;
+			}
+		}
+		for(i=0;i<=7;i++) //en bas a droite
+		{	
+			if(la==ld+i && ca==cd+i)
+			{
+				t[ld+i][cd+i]=2;
+				t[ld][cd]=0;
+				cp=ld+i;
+			}
+			if(cp==la)//pour arriver a la et sortir de la boucle
+			{
+				i=8;
+				return 1;
+			}
+		}
+		for(j=0;j<=7;j++) //en bas a gauche
+		{	
+			if(la==ld+j && ca==cd-j)
+			{
+				t[ld+j][cd-j]=2;
+				t[ld][cd]=0;
+				cp=ld-j;
+			}
+			if(cp==la)//pour arriver a la et sortir de la boucle
+			{
+				j=8;
+				return 1;
+			}
+		}
+		for(k=7;k>=0;k--) //en haut a droite
+		{	
+			if(la==ld-k && ca==cd+k)
+			{
+				t[ld-k][cd+k]=2;
+				t[ld][cd]=0;
+				cp=ld+k;
+			}
+			if(cp==la)//pour arriver a la et sortir de la boucle
+			{
+				k=-1;
+				return 1;
+			}
+		}
+		for(r=7;r>=0;r--) //en haut a gauche
+		{	
+			if(la==ld-r && ca==cd-r)
+			{
+				t[ld-r][cd-r]=2;
+				t[ld][cd]=0;
+				cp=ld+r;
+			}
+			if(cp==la)//pour arriver a la et sortir de la boucle
+			{
+				r=-1;
+				return 1;
+			}
+		}
+	}
+	else if(t[ld][cd]==-2)
+	{
+		for(i=0;i<=7;i++) //en bas
+		{	
+			if(la==ld+i && ca==cd)
+			{
+				if(la==ld+i && ca==cd)
+				{
+					t[ld+i][cd]=-2;
+					t[ld][cd]=0;
+					cp=ld+i;
+				}
+				if(cp==la)
+				{
+					i=8;
+					return 1;
+				}
+			}
+		}
+		for(k=0;k<=7;k++)//a droite
+		{	
+			if(la==ld && ca==cd+k)
+			{
+				t[ld][cd+k]=-2;
+				t[ld][cd]=0;
+				cp=ld+k;
+			}
+			if(cp==la)
+			{
+				k=8;
+				return 1;
+			}
+		}
+		for(j=7;j>=0;j--)//en haut
+		{	
+			if(la==ld-j && ca==cd)
+			{
+				t[ld-j][cd]=-2;
+				t[ld][cd]=0;
+				cp=ld-j;
+			}
+			if(cp==la)
+			{
+				j=-1;
+				return 1;
+			}
+		}
+		for(r=7;r>=0;r--)//a gauche
+		{	
+			if(la==ld && ca==cd-r)
+			{
+				t[ld][cd-r]=-2;
+				t[ld][cd]=0;
+				cp=ld-r;
+			}
+			if(cp==la)
+			{
+				r=-1;
+				return 1;
+			}
+		}
+		for(i=0;i<=7;i++) //en bas a droite
+		{	
+			if(la==ld+i && ca==cd+i)
+			{
+				t[ld+i][cd+i]=-2;
+				t[ld][cd]=0;
+				cp=ld+i;
+			}
+			if(cp==la)//pour arriver a la et sortir de la boucle
+			{
+				i=8;
+				return 1;
+			}
+		}
+		for(j=0;j<=7;j++) //en bas a gauche
+		{	
+			if(la==ld+j && ca==cd-j)
+			{
+				t[ld+j][cd-j]=-2;
+				t[ld][cd]=0;
+				cp=ld-j;
+			}
+			if(cp==la)//pour arriver a la et sortir de la boucle
+			{
+				j=8;
+				return 1;
+			}
+		}
+		for(k=7;k>=0;k--) //en haut a droite
+		{	
+			if(la==ld-k && ca==cd+k)
+			{
+				t[ld-k][cd+k]=-2;
+				t[ld][cd]=0;
+				cp=ld+k;
+			}
+			if(cp==la)//pour arriver a la et sortir de la boucle
+			{
+				k=-1;
+				return 1;
+			}
+		}
+		for(r=7;r>=0;r--) //en haut a gauche
+		{	
+			if(la==ld-r && ca==cd-r)
+			{
+				t[ld-r][cd-r]=-2;
+				t[ld][cd]=0;
+				cp=ld+r;
+			}
+			if(cp==la)//pour arriver a la et sortir de la boucle
+			{
+				r=-1;
+				return 1;
+			}
+		}
+	}
+}
+///////////////////////////////////////////////////////////////////////////
+int Plateau::movdame(int ld,int cd,int la,int ca)
+{
+	int i,j,k,r,cp;
+	if(t[ld][cd]==2)
+	{
+		for(i=0;i<=7;i++) //en bas
+		{	
+			if(la==ld+i && ca==cd )//la +i
+			{
+				if (chlibredame(ld, cd, la, ca)) 
+				{
+					t[ld+i][cd]=2;
+					t[ld][cd]=0;
+					cp=ld+i;
+				}
+			}
+			if(cp==la)//pour arriver a la et sortir de la boucle
+			{
+				i=8;
+				return 1;
+			}
+		}
+		
+		for(k=0;k<=7;k++) //a droite
+		{	
+			if(la==ld && ca==cd+k)
+			{
+				if (chlibredame(ld, cd, la, ca)) 
+				{
+					t[ld][cd+k]=2;
+					t[ld][cd]=0;
+					cp=ld+k;
+				}
+			}
+			if(cp==la)
+			{
+				k=8;
+				return 1;
+			}
+		}
+		
+		for(j=7;j>=0;j--) //en haut
+		{	
+			if(la==ld-j && ca==cd )
+			{
+				if (chlibredame(ld, cd, la, ca)) 
+				{
+					t[ld-j][cd]=2;
+					t[ld][cd]=0;
+					cp=ld-j;
+				}
+			}
+			if(cp==la)
+			{
+				j=-1;
+				return 1;
+			}
+		}
+		for(r=7;r>=0;r--)//a gauche
+		{	
+			if(la==ld && ca==cd-r && chlibredame(ld,cd,la,ca))
+			{
+				t[ld][cd-r]=2;
+				t[ld][cd]=0;
+				cp=ld-r;
+			}
+			if(cp==la)
+			{
+				r=-1;
+				return 1;
+			}
+		}
+		if (la > ld && ca > cd) //en bas a droite
+		{
+            for (i = 1; i <= la - ld; i++) 
+			{
+                if (t[ld+i][cd+i] != 0) 
+				{
+                    return 0;  // Square is not empty, path is blocked
+                }
+            }
+            t[la][ca] = 2;
+            t[ld][cd] = 0;
+        }
+		else if (la > ld && ca < cd) //en bas a gauche
+		{
+            for (j = 1; j <= la - ld; j++) 
+			{
+                if (t[ld+j][cd-j] != 0) 
+				{
+                    return 0;  // Square is not empty, path is blocked
+                }
+            }
+            t[la][ca] = 2;
+            t[ld][cd] = 0;
+        }
+		else if (la < ld && ca > cd) //en haut a droite
+		{
+            for (k = 1; k <= ld - la; k++) 
+			{
+                if (t[ld-k][cd+k] != 0) 
+				{
+                    return 0;  // Square is not empty, path is blocked
+                }
+            }
+            t[la][ca] = 2;
+            t[ld][cd] = 0;
+        }
+		 else if (la < ld && ca < cd) //en haut a gauche
+		{
+            for (r = 1; r <= ld - la; r++) 
+			{
+                if (t[ld-r][cd-r] != 0) 
+				{
+                    return 0;  // Square is not empty, path is blocked
+                }
+            }
+            t[la][ca] = 2;
+            t[ld][cd] = 0;
+        }
+        return 1;
+	}
+	else if(t[ld][cd]==-2)
+	{
+		for(i=0;i<=7;i++) //en bas
+		{
+			if(la==ld+i && ca==cd)
+			{
+				if (chlibredame(ld, cd, la, ca)) 
+				{
+					t[ld+i][cd]=-2;
+					t[ld][cd]=0;
+					cp=ld+i;
+				}
+			}
+			if(cp==la)
+			{
+				i=8;
+				return 1;
+			}
+		}
+		for(k=0;k<=7;k++)//a droite
+		{	
+			if(la==ld && ca==cd+k)
+			{
+				if (chlibredame(ld, cd, la, ca)) 
+				{
+					t[ld][cd+k]=-2;
+					t[ld][cd]=0;
+					cp=ld+k;
+				}
+			}
+			if(cp==la)
+			{
+				k=8;
+				return 1;
+			}
+		}
+		for(j=7;j>=0;j--)//en haut
+		{	
+			if(la==ld-j && ca==cd)
+			{
+				if (chlibredame(ld, cd, la, ca)) 
+				{
+					t[ld-j][cd]=-2;
+					t[ld][cd]=0;
+					cp=ld-j;
+				}
+			}
+			if(cp==la)
+			{
+				j=-1;
+				return 1;
+			}
+		}
+		for(r=7;r>=0;r--)//a gauche
+		{	
+			if(la==ld && ca==cd-r && chlibredame(ld,cd,la,ca))
+			{
+				t[ld][cd-r]=-2;
+				t[ld][cd]=0;
+				cp=ld-r;
+			}
+			if(cp==la)
+			{
+				r=-1;
+				return 1;
+			}
+		}
+		if (la > ld && ca > cd) //en bas a droite
+		{
+            for (i = 1; i <= la - ld; i++) 
+			{
+                if (t[ld+i][cd+i] != 0) 
+				{
+                    return 0;  // Square is not empty, path is blocked
+                }
+            }
+            t[la][ca] = -2;
+            t[ld][cd] = 0;
+        }
+		else if (la > ld && ca < cd) //en bas a gauche
+		{
+            for (j = 1; j <= la - ld; j++) 
+			{
+                if (t[ld+j][cd-j] != 0) 
+				{
+                    return 0;  // Square is not empty, path is blocked
+                }
+            }
+            t[la][ca] = -2;
+            t[ld][cd] = 0;
+        }
+		else if (la < ld && ca > cd) //en haut a droite
+		{
+            for (k = 1; k <= ld - la; k++) 
+			{
+                if (t[ld-k][cd+k] != 0) 
+				{
+                    return 0;  // Square is not empty, path is blocked
+                }
+            }
+            t[la][ca] = -2;
+            t[ld][cd] = 0;
+        }
+		else if (la < ld && ca < cd) //en haut a gauche
+		{
+            for (r = 1; r <= ld - la; r++) 
+			{
+                if (t[ld-r][cd-r] != 0) 
+				{
+                    return 0;  // Square is not empty, path is blocked
+                }
+            }
+            t[la][ca] = -2;
+            t[ld][cd] = 0;
+        }
+        return 1;
+	}
+}

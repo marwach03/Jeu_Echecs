@@ -1,0 +1,65 @@
+Blanc
+Tour Noir
+Cavalier Noir
+Fou Noir
+Dame Noir
+Roi Noir
+Fou Noir
+Cavalier Noir
+Tour Noir
+Pion Noir
+Pion Noir
+Pion Noir
+Pion Noir
+Pion Noir
+Pion Noir
+Pion Noir
+Pion Noir
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Vide
+Pion Blanc
+Pion Blanc
+Pion Blanc
+Pion Blanc
+Pion Blanc
+Pion Blanc
+Pion Blanc
+Pion Blanc
+Tour Blanc
+Cavalier Blanc
+Fou Blanc
+Dame Blanc
+Roi Blanc
+Fou Blanc
+Cavalier Blanc
+Tour Blanc
